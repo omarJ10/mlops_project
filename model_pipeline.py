@@ -382,8 +382,7 @@ def predict_new_data(model, X_new):
     try:
         predictions = model.predict(X_new)
         print(
-            f"\n[OK] Predictions made successfully for {
-                len(predictions)} samples")
+            f"\n[OK] Predictions made successfully for {len(predictions)} samples")
         return predictions
     except Exception as e:
         print(f"\n[ERROR] Error making predictions: {str(e)}")

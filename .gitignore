@@ -36,6 +36,9 @@ ENV/
 # MLflow
 mlruns/
 mlartifacts/
+mlflow.db
+mlflow.db-shm
+mlflow.db-wal
 
 # Jupyter Notebook
 .ipynb_checkpoints

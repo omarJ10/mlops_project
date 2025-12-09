@@ -5,7 +5,8 @@ WORKDIR /app
 # Copier uniquement les dépendances d'abord pour profiter du cache Docker
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Install with increased timeout and retry
+RUN pip install --default-timeout=1000 --retries 5 -r requirements.txt
 
 # Copier tout le projet dans l'image
 COPY . .

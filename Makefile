@@ -107,7 +107,8 @@ flask:
 # Start MLflow UI
 .PHONY: mlflow
 mlflow:
-	@./start_mlflow.sh
+	@echo "Starting MLflow UI on http://localhost:5000"
+	@$(VENV)/bin/mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000
 
 # Test API avec Swagger (Atelier 4 - Étape 04)
 .PHONY: test-api
