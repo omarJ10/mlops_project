@@ -13,7 +13,11 @@ Usage examples:
 import argparse
 import sys
 import os
-from model_pipeline import (
+
+# Add parent directory to path to allow imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from src.model_pipeline import (
     load_data, explore_data, prepare_data, train_model,
     evaluate_model, save_model, load_model,
     visualize_results, optimize_hyperparameters

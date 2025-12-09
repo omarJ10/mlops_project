@@ -4,7 +4,7 @@
 VENV := venv
 PYTHON := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
-DATA_FILE := drug200.csv
+DATA_FILE := data/drug200.csv
 DOCKER_IMAGE_NAME := omar_jalled_4ds8_mlops
 DOCKER_TAG := latest
 DOCKER_CONTAINER_NAME := omar_jalled_4ds8_mlops_container
@@ -43,28 +43,28 @@ install:
 .PHONY: pipeline
 pipeline:
 	@echo "Running ML pipeline..."
-	$(PYTHON) main.py --action full_pipeline --data $(DATA_FILE) --no_smote --n_estimators 100
+	PYTHONPATH=. $(PYTHON) src/main.py --action full_pipeline --data $(DATA_FILE) --no_smote --n_estimators 100
 	@echo "Pipeline completed!"
 
 # Run tests
 .PHONY: test
 test:
 	@echo "Running tests..."
-	$(PYTHON) test_pipeline.py
+	PYTHONPATH=. $(PYTHON) tests/test_pipeline.py
 	@echo "Tests completed!"
 
 # Run code linting
 .PHONY: lint
 lint:
 	@echo "Running code linting with pylint..."
-	@$(PYTHON) -m pylint main model_pipeline --disable=C0114,C0116 || true
+	@$(PYTHON) -m pylint src/main src/model_pipeline --disable=C0114,C0116 || true
 	@echo "Linting completed!"
 
 # Run security checks
 .PHONY: security
 security:
 	@echo "Running security checks with bandit..."
-	@$(PYTHON) -m bandit model_pipeline.py main.py -f screen || true
+	@$(PYTHON) -m bandit src/model_pipeline.py src/main.py -f screen || true
 	@echo "Security checks completed!"
 
 # Watch files and auto-run pipeline on changes
@@ -89,7 +89,7 @@ serve:
 	@echo "  Documentation Swagger : http://localhost:8000/docs"
 	@echo ""
 	@echo "═══════════════════════════════════════════════════════════"
-	@$(PYTHON) -m uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+	PYTHONPATH=. $(PYTHON) -m uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload
 
 # Start Flask web interface
 .PHONY: flask
@@ -102,7 +102,7 @@ flask:
 	@echo "  Assurez-vous que l'API tourne sur le port 8000"
 	@echo ""
 	@echo "═══════════════════════════════════════════════════════════"
-	@$(PYTHON) flask_app.py
+	PYTHONPATH=. $(PYTHON) src/flask_app.py
 
 # Start MLflow UI
 .PHONY: mlflow
@@ -123,7 +123,7 @@ test-api:
 	@echo ""
 	@echo "  Ou exécutez les tests automatiques :"
 	@echo ""
-	@$(PYTHON) test_api.py
+	PYTHONPATH=. $(PYTHON) tests/test_api.py
 
 # Build Docker image
 .PHONY: docker-build
