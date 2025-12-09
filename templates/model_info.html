@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Informations Modèle - Drug Classification{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-info-circle"></i> Informations du Modèle
+            </div>
+            <div class="card-body">
+                {% if model %}
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-robot"></i> Type de Modèle
+                                </h5>
+                                <h3 class="text-primary">{{ model.model_type }}</h3>
+                                <p class="text-muted mb-0">Algorithme utilisé</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-tree"></i> Estimateurs
+                                </h5>
+                                <h3 class="text-success">{{ model.n_estimators }}</h3>
+                                <p class="text-muted mb-0">Nombre d'arbres de décision</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-layer-group"></i> Features
+                                </h5>
+                                <h3 class="text-info">{{ model.n_features }}</h3>
+                                <p class="text-muted mb-0">Nombre de caractéristiques</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-pills"></i> Classes
+                                </h5>
+                                <h3 class="text-warning">{{ model.classes|length }}</h3>
+                                <p class="text-muted mb-0">Types de médicaments</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-pills"></i> Médicaments Prédits
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-around flex-wrap">
+                            {% for drug in model.classes %}
+                            <span class="badge bg-primary fs-5 m-2 p-3">{{ drug }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-file"></i> Chemin du Modèle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <code>{{ model.model_path }}</code>
+                    </div>
+                </div>
+                
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Impossible de charger les informations du modèle. Assurez-vous que l'API est démarrée.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if health %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <i class="fas fa-heartbeat"></i> État de l'API
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <h5>Statut</h5>
+                        <span class="badge {{ 'bg-success' if health.status == 'healthy' else 'bg-danger' }} fs-5">
+                            {{ health.status }}
+                        </span>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Modèle Chargé</h5>
+                        <span class="badge {{ 'bg-success' if health.model_loaded else 'bg-danger' }} fs-5">
+                            {{ "Oui" if health.model_loaded else "Non" }}
+                        </span>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Version API</h5>
+                        <span class="badge bg-info fs-5">{{ health.version }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <i class="fas fa-cogs"></i> Architecture du Pipeline
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="p-3 border rounded">
+                            <i class="fas fa-database fa-3x text-primary mb-2"></i>
+                            <h6>1. Données Brutes</h6>
+                            <small class="text-muted">drug200.csv</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="p-3 border rounded">
+                            <i class="fas fa-cogs fa-3x text-success mb-2"></i>
+                            <h6>2. Prétraitement</h6>
+                            <small class="text-muted">Binning + One-hot</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="p-3 border rounded">
+                            <i class="fas fa-brain fa-3x text-info mb-2"></i>
+                            <h6>3. Random Forest</h6>
+                            <small class="text-muted">{{ model.n_estimators if model else '?' }} arbres</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

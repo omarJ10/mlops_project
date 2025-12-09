@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - Drug Classification{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-center text-white mb-5">
+        <h1 class="display-3 fw-bold mb-3">
+            <i class="fas fa-pills"></i> Drug Classification System
+        </h1>
+        <p class="lead">Système intelligent de prédiction de médicaments basé sur ML</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Carte Prédiction -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h5 class="card-title">Prédiction</h5>
+                <p class="card-text">Prédisez le médicament approprié pour un patient</p>
+                <a href="{{ url_for('predict') }}" class="btn btn-primary">
+                    Commencer <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carte Ré-entraînement -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h5 class="card-title">Ré-entraînement</h5>
+                <p class="card-text">Optimisez le modèle avec de nouveaux hyperparamètres</p>
+                <a href="{{ url_for('retrain') }}" class="btn btn-success">
+                    Ré-entraîner <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carte Informations -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <h5 class="card-title">Info Modèle</h5>
+                <p class="card-text">Consultez les détails du modèle actuel</p>
+                <a href="{{ url_for('model_info') }}" class="btn btn-primary">
+                    Voir détails <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carte À propos -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h5 class="card-title">À propos</h5>
+                <p class="card-text">En savoir plus sur le projet et l'équipe</p>
+                <a href="{{ url_for('about') }}" class="btn btn-primary">
+                    Découvrir <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Caractéristiques -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-star"></i> Caractéristiques du Système
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <h5><i class="fas fa-check-circle text-success"></i> Machine Learning</h5>
+                        <p class="text-muted">Random Forest avec 100 arbres de décision</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <h5><i class="fas fa-check-circle text-success"></i> API REST</h5>
+                        <p class="text-muted">FastAPI moderne et performante</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <h5><i class="fas fa-check-circle text-success"></i> Interface Web</h5>
+                        <p class="text-muted">Interface Flask intuitive et responsive</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <h5><i class="fas fa-check-circle text-success"></i> Prédictions Rapides</h5>
+                        <p class="text-muted">Résultats en temps réel</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <h5><i class="fas fa-check-circle text-success"></i> Ré-entraînement</h5>
+                        <p class="text-muted">Optimisation des hyperparamètres en ligne</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <h5><i class="fas fa-check-circle text-success"></i> Documentation</h5>
+                        <p class="text-muted">Swagger UI intégrée</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Médicaments -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-pills"></i> Médicaments Prédits
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col">
+                        <h3 class="text-primary">DrugA</h3>
+                    </div>
+                    <div class="col">
+                        <h3 class="text-success">DrugB</h3>
+                    </div>
+                    <div class="col">
+                        <h3 class="text-info">DrugC</h3>
+                    </div>
+                    <div class="col">
+                        <h3 class="text-warning">DrugX</h3>
+                    </div>
+                    <div class="col">
+                        <h3 class="text-danger">DrugY</h3>
+                    </div>
+                </div>
+                <p class="text-center text-muted mt-3">
+                    Le système peut prédire 5 types de médicaments différents
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

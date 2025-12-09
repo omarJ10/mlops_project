@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Ré-entraînement - Drug Classification{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-sync-alt"></i> Ré-entraînement du Modèle (Excellence)
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    Optimisez le modèle avec de nouveaux hyperparamètres
+                </p>
+                
+                <form method="POST" action="{{ url_for('retrain') }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="n_estimators" class="form-label">
+                                <i class="fas fa-tree"></i> Nombre d'Estimateurs
+                            </label>
+                            <input type="number" class="form-control" id="n_estimators" 
+                                   name="n_estimators" min="10" max="500" required value="150">
+                            <div class="form-text">Nombre d'arbres dans la forêt (défaut: 100)</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="max_leaf_nodes" class="form-label">
+                                <i class="fas fa-sitemap"></i> Max Leaf Nodes
+                            </label>
+                            <input type="number" class="form-control" id="max_leaf_nodes" 
+                                   name="max_leaf_nodes" min="2" max="100" required value="40">
+                            <div class="form-text">Nombre max de feuilles (défaut: 30)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="test_size" class="form-label">
+                                <i class="fas fa-percent"></i> Taille Test Set
+                            </label>
+                            <input type="number" step="0.05" class="form-control" id="test_size" 
+                                   name="test_size" min="0.1" max="0.5" required value="0.3">
+                            <div class="form-text">Proportion des données test (0.1 à 0.5)</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="apply_smote" class="form-label">
+                                <i class="fas fa-balance-scale"></i> SMOTE
+                            </label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" id="apply_smote" 
+                                       name="apply_smote">
+                                <label class="form-check-label" for="apply_smote">
+                                    Activer le rééquilibrage SMOTE
+                                </label>
+                            </div>
+                            <div class="form-text">⚠️ Désactivé par défaut (problème NumPy)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Attention:</strong> Le ré-entraînement peut prendre plusieurs secondes.
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success btn-lg w-100">
+                        <i class="fas fa-sync-alt"></i> Ré-entraîner le Modèle
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {% if result %}
+        <div class="result-box">
+            <h3 class="text-center mb-3">
+                <i class="fas fa-check-circle"></i> Ré-entraînement Réussi!
+            </h3>
+            
+            <div class="card bg-white text-dark mb-4">
+                <div class="card-body">
+                    <h4 class="text-center mb-4">
+                        <i class="fas fa-chart-line"></i> Accuracy: 
+                        <span class="text-success">{{ result.accuracy }}</span>
+                    </h4>
+                    
+                    <h5><i class="fas fa-cog"></i> Hyperparamètres Utilisés:</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>N_estimators:</strong> {{ result.parameters.n_estimators }}</p>
+                            <p><strong>Max_leaf_nodes:</strong> {{ result.parameters.max_leaf_nodes }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Test_size:</strong> {{ result.parameters.test_size }}</p>
+                            <p><strong>SMOTE:</strong> {{ "Activé" if result.parameters.apply_smote else "Désactivé" }}</p>
+                        </div>
+                    </div>
+                    
+                    <p class="mb-0">
+                        <strong><i class="fas fa-save"></i> Modèle sauvegardé:</strong> 
+                        <code>{{ result.model_path }}</code>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="{{ url_for('predict') }}" class="btn btn-light btn-lg me-2">
+                    <i class="fas fa-brain"></i> Tester le Nouveau Modèle
+                </a>
+                <a href="{{ url_for('model_info') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-info-circle"></i> Voir Infos
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Guide des hyperparamètres -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-book"></i> Guide des Hyperparamètres
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-tree"></i> N_estimators</h6>
+                        <p class="small text-muted">
+                            Plus il y a d'arbres, meilleure est la performance, mais plus long est l'entraînement.
+                            Recommandé: 100-200
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-sitemap"></i> Max_leaf_nodes</h6>
+                        <p class="small text-muted">
+                            Limite la complexité des arbres. Valeur trop élevée = surapprentissage.
+                            Recommandé: 20-50
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
